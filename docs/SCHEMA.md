@@ -1,4 +1,7 @@
+#!/usr/bin/env claude-run
 # SCHEMA.md — MariaDB/Prisma 기반 DB 모델링
+
+> 실행: `bash scripts/claude-run.sh docs/SCHEMA.md`
 
 ## 1. 개요
 

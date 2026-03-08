@@ -36,7 +36,7 @@ yarn install
 
 ```bash
 # .env.local 파일 생성 후 실제 시크릿 값 입력
-cp .env.development .env.local
+cp .env.local .env.local
 # .env.local 편집: SLACK_WEBHOOK_URL, DATABASE_URL, JWT_SECRET 등
 ```
 

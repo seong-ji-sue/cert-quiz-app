@@ -1,6 +1,9 @@
 #!/bin/bash
-if [ -f "$(dirname "$0")/.env" ]; then
-  source "$(dirname "$0")/.env"
+DIR="$(dirname "$0")"
+if [ -f "$DIR/.env" ]; then
+  source "$DIR/.env"
+elif [ -f "$DIR/.env.development" ]; then
+  source "$DIR/.env.development"
 fi
 
 SUMMARY=${1:-"작업 완료"}

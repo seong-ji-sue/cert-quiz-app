@@ -11,3 +11,5 @@ yarn.lock
 # 로컬 전용 환경변수 (gitignore)
 .env.local
 .env.*.local
+# 데이터 저장소 — 원본 파일 제외 (용량 관리)
+data/raw/

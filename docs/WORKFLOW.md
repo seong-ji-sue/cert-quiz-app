@@ -1,4 +1,7 @@
+#!/usr/bin/env claude-run
 # WORKFLOW.md — 개발 워크플로우 전체 프로세스
+
+> 실행: `bash scripts/claude-run.sh docs/WORKFLOW.md`
 
 ## 1. 전체 흐름 요약
 

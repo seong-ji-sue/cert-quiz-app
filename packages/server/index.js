@@ -1,17 +1,16 @@
 import express from 'express';
-import {testFunc} from '@nextpr/common';
 import cors from 'cors';
 
 const app = express();
-const port = 3001;
+const port = process.env.NODE_SERVER_PORT || 4010;
 
 app.use(cors({origin: '*', credentials: true}));
+app.use(express.json());
 
 app.get('/', (req, res) => {
-	res.send('Hello from backend!');
+	res.send('Hello from cert-quiz-app backend!');
 });
 
 app.listen(port, () => {
 	console.log(`Backend server is running at http://localhost:${port}`);
-	console.log(testFunc());
 });

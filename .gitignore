@@ -6,6 +6,8 @@ node_modules/
 
 .next
 
-package-lock.json
+yarn.lock
 
-.env
+# 로컬 전용 환경변수 (gitignore)
+.env.local
+.env.*.local

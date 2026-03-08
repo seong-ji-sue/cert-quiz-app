@@ -1,11 +1,57 @@
 {
   "version": "1.0.0",
-  "lastSync": null,
+  "lastSync": "2026-03-08",
   "categories": {
-    "iz": { "name": "정보처리기사", "url": "https://www.comcbt.com/xe/iz", "exams": [] },
-    "c1": { "name": "컴퓨터활용능력 1급", "url": "https://www.comcbt.com/xe/c1", "exams": [] },
-    "c2": { "name": "컴퓨터활용능력 2급", "url": "https://www.comcbt.com/xe/c2", "exams": [] },
-    "jf": { "name": "네트워크관리사 2급", "url": "https://www.comcbt.com/xe/jf", "exams": [] },
-    "w1": { "name": "워드프로세서", "url": "https://www.comcbt.com/xe/w1", "exams": [] }
+    "iz": {
+      "name": "정보처리기사",
+      "url": "https://www.comcbt.com/xe/iz",
+      "exams": []
+    },
+    "c1": {
+      "name": "컴퓨터활용능력 1급",
+      "url": "https://www.comcbt.com/xe/c1",
+      "exams": []
+    },
+    "c2": {
+      "name": "컴퓨터활용능력 2급",
+      "url": "https://www.comcbt.com/xe/c2",
+      "exams": []
+    },
+    "jf": {
+      "name": "네트워크관리사 2급",
+      "url": "https://www.comcbt.com/xe/jf",
+      "exams": []
+    },
+    "w1": {
+      "name": "워드프로세서",
+      "url": "https://www.comcbt.com/xe/w1",
+      "exams": []
+    },
+    "security-engineer": {
+      "name": "정보보안기사",
+      "source": "local-files",
+      "exams": [
+        {
+          "examId": "security-engineer-20200530",
+          "date": "2020-05-30",
+          "file": "data/parsed/security-engineer/security-engineer-20200530.json"
+        },
+        {
+          "examId": "security-engineer-20200905",
+          "date": "2020-09-05",
+          "file": "data/parsed/security-engineer/security-engineer-20200905.json"
+        },
+        {
+          "examId": "security-engineer-20220313",
+          "date": "2022-03-13",
+          "file": "data/parsed/security-engineer/security-engineer-20220313.json"
+        },
+        {
+          "examId": "security-engineer-20220625",
+          "date": "2022-06-25",
+          "file": "data/parsed/security-engineer/security-engineer-20220625.json"
+        }
+      ]
+    }
   }
 }

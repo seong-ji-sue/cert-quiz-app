@@ -6,6 +6,11 @@ node_modules/
 
 .next
 
-package-lock.json
+yarn.lock
 
+# 환경변수 파일 (시크릿 포함)
 .env
+.env.development
+.env.production
+.env.local
+.env.*.local

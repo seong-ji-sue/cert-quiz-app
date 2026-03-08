@@ -8,9 +8,6 @@ node_modules/
 
 yarn.lock
 
-# 환경변수 파일 (시크릿 포함)
-.env
-.env.development
-.env.production
+# 로컬 전용 환경변수 (gitignore)
 .env.local
 .env.*.local

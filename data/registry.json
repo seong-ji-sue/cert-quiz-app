@@ -2,30 +2,10 @@
   "version": "1.0.0",
   "lastSync": null,
   "categories": {
-    "iz": {
-      "name": "정보처리기사",
-      "url": "https://www.comcbt.com/xe/iz",
-      "exams": []
-    },
-    "c1": {
-      "name": "컴퓨터활용능력 1급",
-      "url": "https://www.comcbt.com/xe/c1",
-      "exams": []
-    },
-    "c2": {
-      "name": "컴퓨터활용능력 2급",
-      "url": "https://www.comcbt.com/xe/c2",
-      "exams": []
-    },
-    "jf": {
-      "name": "네트워크관리사 2급",
-      "url": "https://www.comcbt.com/xe/jf",
-      "exams": []
-    },
-    "w1": {
-      "name": "워드프로세서",
-      "url": "https://www.comcbt.com/xe/w1",
-      "exams": []
-    }
+    "iz": { "name": "정보처리기사", "url": "https://www.comcbt.com/xe/iz", "exams": [] },
+    "c1": { "name": "컴퓨터활용능력 1급", "url": "https://www.comcbt.com/xe/c1", "exams": [] },
+    "c2": { "name": "컴퓨터활용능력 2급", "url": "https://www.comcbt.com/xe/c2", "exams": [] },
+    "jf": { "name": "네트워크관리사 2급", "url": "https://www.comcbt.com/xe/jf", "exams": [] },
+    "w1": { "name": "워드프로세서", "url": "https://www.comcbt.com/xe/w1", "exams": [] }
   }
 }

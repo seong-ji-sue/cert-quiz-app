@@ -214,7 +214,8 @@ QuizLayout
 
 <!-- run env 플레이스홀더 최신화 확인 -->
 ```bash
-grep -c "your-" .env.development && echo "✅ .env.development 플레이스홀더 확인"
+COUNT=$(grep -c "your-" .env.development 2>/dev/null || echo 0)
+echo "✅ .env.development 플레이스홀더 ${COUNT}개 확인 (실제 시크릿은 .env.local에)"
 ```
 
 ---

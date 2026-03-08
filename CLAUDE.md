@@ -9,82 +9,137 @@
 - **Roles**: Gemini/Grok(기획/리뷰), Claude(아키텍처/코딩), Claude Code(실행/Git)
 - **Stack**: Next.js 14 (Pages Router), NestJS, MariaDB, Prisma, SCSS
 - **Environment**: Docker (Runtime), IntelliJ (Remote SSH)
-- **Package Manager**: **yarn** (v4.x, node-modules linker)
+- **Package Manager**: **yarn** (v4.x, node-modules linker) — 반드시 yarn 사용
 
 ## 📁 Monorepo Package Structure
 ```
 packages/
 ├── host/           # Next.js 14 — FE 메인 쉘 (Module Federation Host, port 4000)
 ├── remote/         # Next.js 14 — FE 원격 모듈 (Module Federation Remote, port 4001)
-├── api/            # NestJS    — BE REST API 서버 (port 4010) [예정]
+├── api/            # NestJS    — BE REST API (port 4010) [Phase 1 생성 예정]
 ├── client-common/  # 공유 FE 라이브러리 (@nextpr/client-common)
 └── server-common/  # 공유 BE 라이브러리 (@nextpr/server-common)
 ```
-> `packages/server`는 레거시 Express 서버로, `packages/api` (NestJS)로 교체 예정.
+> `packages/server`는 레거시 Express 서버 → `packages/api`(NestJS)로 교체 예정
 
 ## 🌍 Environment Variables
-`.env` 파일은 환경별로 2개 분리 관리합니다.
-- `.env.development`: 개발 환경 변수 (NODE_ENV=development, localhost URL)
-- `.env.production`: 운영 환경 변수 (NODE_ENV=production, 실제 서버 URL)
-- **실제 시크릿 값**(API Key 등)은 `.env.local` 또는 별도 비밀 관리 시스템에 보관 (gitignore)
+- `.env.development`: 개발 환경 URL/포트 (git tracked, 시크릿 없음)
+- `.env.production`: 운영 환경 URL/포트 (git tracked, 시크릿 없음)
+- `.env.local`: **실제 시크릿** (gitignored) — SLACK_WEBHOOK_URL, DB URL, API Key 등
 
-## 📋 Operational Workflow (Strict Process)
-모든 작업은 아래 절차에 따라 단계별(Phase)로 진행하며, 각 단계는 전용 `.md` 파일에 기록됩니다.
+---
 
-### 1. 단계별 메인 문서 관리 (/docs)
+## 🔄 Development Workflow (엄격 준수)
+
+> 전체 상세 내용: `docs/WORKFLOW.md`
+
+### 매 작업 시 반드시 따를 순서:
+
+```
+① feature 브랜치 생성 (develop에서 분기)
+    git checkout develop && git checkout -b feature/작업명
+
+② 개발 & 상황별 커밋
+    (feat/fix/docs/chore/refactor/wip 타입 사용)
+
+③ AI 코드 리뷰 수행 → docs/review/YYYY-MM-DD-브랜치명.md 기록
+
+④ 서버 실행 검증
+    bash scripts/verify.sh
+
+⑤ 브랜치 푸시 + Slack 알림 (ship.sh 사용)
+    bash scripts/ship.sh "작업 내용 요약"
+
+⑥ 사용자가 Slack 알림 확인 후 머지 결정
+    (사용자 승인 없이 develop/master 머지 금지)
+```
+
+---
+
+## 🤖 자율 실행 원칙 (승인 최소화)
+
+**자동 실행 가능 (승인 불필요):**
+- 파일 읽기/쓰기/편집
+- `yarn install`
+- `git add`, `git commit`
+- `git push origin feature/*` (feature 브랜치에만)
+- `git checkout -b feature/*` (새 브랜치 생성)
+- 개발 서버 실행 및 curl 헬스체크
+- `docs/` 문서 작성 및 업데이트
+- `scripts/` 스크립트 실행
+
+**반드시 사용자 확인 필요:**
+- `develop` / `master` 브랜치 머지 또는 직접 커밋
+- `git push --force`
+- 파일/디렉터리 삭제
+- `.env.*` 파일 수정
+- docker-compose 스택 재시작
+
+---
+
+## 📋 Operational Workflow (문서 관리)
+
+### 1. 단계별 메인 문서 (/docs)
 작업 시작 전 해당 파일을 읽고, 종료 후 업데이트합니다.
-- `PLAN.md`: 전체 기획 및 기능 명세 (Gemini/Grok 협업 결과)
-- `ARCH.md`: 시스템 아키텍처 및 모노레포 구조 설계
-- `SCHEMA.md`: DB 모델링 및 Prisma 스키마 설계
-- `FE_DEV.md` / `BE_DEV.md`: 프론트엔드 및 백엔드 개발 명세 (작성 예정)
 
-### 2. 히스토리 기록 및 오류 추적 (/docs/history)
-날짜별로 모든 활동과 발생한 오류를 기록하여 컨텍스트를 유지합니다.
-- **형식**: `/docs/history/YYYY-MM-DD.md`
-- **포함 내용**:
-  - `[작업 내용]`: 오늘 수행한 구체적인 개발 사항.
-  - `[오류 기록]`: 발생한 에러 로그, 원인 분석, 해결 방법 (Troubleshooting).
-  - `[결과 확인]`: 코드 실행 결과 및 정상 동작 확인 여부.
+| 파일 | 설명 | 갱신 시점 |
+|------|------|----------|
+| `docs/README.md` | 문서 파일 목록 및 설명 | 새 문서 추가 시 |
+| `docs/WORKFLOW.md` | 개발 워크플로우 전체 프로세스 | 프로세스 변경 시 |
+| `docs/PLAN.md` | 서비스 기획 및 기능 명세 | 기획 변경 시 |
+| `docs/ARCH.md` | 아키텍처 및 모노레포 구조 | 구조 변경 시 |
+| `docs/SCHEMA.md` | DB 모델링 및 Prisma 스키마 | 테이블 변경 시 |
+| `docs/FE_DEV.md` | 프론트엔드 개발 명세 | FE 개발 시 |
+| `docs/BE_DEV.md` | 백엔드 개발 명세 | BE 개발 시 |
+
+### 2. AI 리뷰 기록 (/docs/review)
+- **형식**: `docs/review/YYYY-MM-DD-브랜치명.md`
+- **내용**: 변경 파일 검토, 오류/보안/스타일 점검, 최종 판정
+- **판정**: ✅ 머지 가능 / ⚠️ 수정 후 재검토 / ❌ 머지 불가
+
+### 3. 작업 이력 (/docs/history)
+- **형식**: `docs/history/YYYY-MM-DD.md`
+- **내용**: `[작업 내용]`, `[오류 기록]`, `[결과 확인]`
+
+---
 
 ## 🌿 Git Workflow & Commit Convention
-표준 Git-Flow와 직관적인 커밋 메시지 형식을 따릅니다.
 
-### 1. Branch Strategy
-- `master`: 제품 출시 가능한 상태의 안정된 브랜치.
-- `develop`: 다음 출시 버전을 개발하는 통합 브랜치.
-- `feature/기능명`: **작업마다 새 브랜치 생성** (develop에서 분기).
-- `hotfix/이슈명`: 긴급 오류 수정 브랜치 (master에서 분기).
+### Branch Strategy
+- `master`: 안정된 배포 브랜치
+- `develop`: 통합 개발 브랜치
+- `feature/기능명`: **작업마다 새 브랜치** (develop에서 분기)
+- `fix/이슈명`: 버그 수정 브랜치
+- `hotfix/이슈명`: 긴급 수정 (master에서 분기)
 
-### 2. Commit Message Format
-`타입(범위): [날짜] 내용` 형식을 사용합니다.
-- **타입**: `feat`(기능), `fix`(버그), `docs`(문서), `refactor`(리팩토링), `chore`(설정)
-- **예시**: `feat(auth): [2026-03-08] 소셜 로그인 기능 구현 및 PLAN.md 업데이트`
+### Commit Message Format
+`타입(범위): [YYYY-MM-DD] 내용`
+- **타입**: `feat`, `fix`, `docs`, `refactor`, `chore`, `wip`
+- **예시**: `feat(auth): [2026-03-08] JWT 로그인 API 구현`
 
-## 🚀 Development Execution Principles
-- **Zero-Error Policy**: 모든 코드는 푸시 전 로컬 실행을 통해 오류 없음을 검증해야 함.
-- **Context Sync**: 새로운 세션 시작 시 반드시 `/docs` 내의 모든 `.md` 파일을 읽어 이전 진행 상황을 완벽히 파악함.
-- **Auto Reporting**: 작업 완료 후 반드시 `./notify.sh`를 통해 슬랙으로 알림을 전송함.
-- **Branch per Task**: 작업마다 `feature/작업명` 브랜치를 생성하고, 완료 후 develop에 머지.
+---
 
 ## 💻 CLI Commands
+
 ```bash
-# 패키지 설치 (반드시 yarn 사용)
+# 패키지 설치 (반드시 yarn)
 yarn install
 
-# 개발 서버 실행
-yarn start  # 모든 패키지 동시 실행 (lerna)
+# 개발 서버 실행 (전체)
+yarn start
 
-# 슬랙 알림 (프로젝트 루트)
-./notify.sh "[2026-03-08] FE 아키텍처 설계 완료"
+# 서버 실행 검증
+bash scripts/verify.sh
 
-# Git 브랜치 생성 및 커밋
-git checkout -b feature/기능명
-git add <파일>
-git commit -m "feat(범위): [날짜] 작업 내용"
-git push origin feature/기능명
+# 작업 완료 후 푸시 + Slack 알림
+bash scripts/ship.sh "작업 내용 요약"
+bash scripts/ship.sh "작업 요약" --no-verify   # 검증 생략
 
-# develop 머지 (PR 권장)
-git checkout develop
-git merge feature/기능명
-git push origin develop
+# 슬랙 알림 직접 전송
+./notify.sh "메시지"
+
+# AI 리뷰 기록
+bash scripts/review.sh pass "리뷰 요약"        # 통과
+bash scripts/review.sh warn "수정 필요 사항"   # 경고
+bash scripts/review.sh fail "머지 불가 이유"   # 실패
 ```

@@ -4,8 +4,8 @@ import styles from './quiz.module.scss';
 
 // 자격증 목록 (API 미구동 시 기본값)
 const DEFAULT_CERTS = [
+	{code: 'security-engineer', name: '정보보안기사', count: 400},
 	{code: 'iz', name: '정보처리기사', count: 0},
-	{code: 'ccw', name: '정보보안기사', count: 0},
 	{code: 'c1', name: '컴퓨터활용능력 1급', count: 0},
 	{code: 'c2', name: '컴퓨터활용능력 2급', count: 0},
 	{code: 'jf', name: '네트워크관리사 2급', count: 0},
@@ -28,7 +28,7 @@ export default function QuizSelectPage() {
 
 	useEffect(() => {
 		// API에서 자격증 목록 로드 시도
-		fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4010'}/api/quiz/certificates`)
+		fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/quiz/certificates`)
 			.then(r => r.json())
 			.then(({data}) => data?.length && setCerts(data))
 			.catch(() => {}); // API 미구동 시 기본값 사용

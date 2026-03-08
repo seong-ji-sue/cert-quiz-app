@@ -2,7 +2,7 @@ import {useState, useEffect, useCallback} from 'react';
 import {useRouter} from 'next/router';
 import styles from './exam.module.scss';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4010';
+const API = process.env.NEXT_PUBLIC_API_URL || '';
 
 // 샘플 문제 (API 미구동 시 사용)
 const SAMPLE_QUESTIONS = [

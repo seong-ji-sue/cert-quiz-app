@@ -1,0 +1,51 @@
+version: '3.9'
+
+services:
+  # ── MariaDB ───────────────────────────────────────────────
+  mariadb:
+    image: mariadb:10.11
+    container_name: cert-quiz-mariadb
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: vibe
+      MYSQL_DATABASE: cert_quiz_db
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./docker/mariadb/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── FE Host (Next.js) ────────────────────────────────────
+  host:
+    image: host:latest
+    container_name: cert-quiz-host
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env.production
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  # ── FE Remote (Next.js MF) ───────────────────────────────
+  remote:
+    image: remote:latest
+    container_name: cert-quiz-remote
+    ports:
+      - "4001:4001"
+    env_file:
+      - .env.production
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+volumes:
+  mariadb_data:
+    driver: local

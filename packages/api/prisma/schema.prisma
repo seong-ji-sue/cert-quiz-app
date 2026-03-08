@@ -1,0 +1,83 @@
+// Prisma Schema — cert-quiz-app
+// 마이그레이션: yarn workspace @nextpr/api prisma:migrate
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── 자격증 카테고리 ──────────────────────────────────────
+model Certificate {
+  id          Int        @id @default(autoincrement())
+  code        String     @unique @db.VarChar(20)   // 'iz' | 'c1' | 'c2' | 'jf'
+  name        String     @db.VarChar(200)           // '정보처리기사'
+  description String?    @db.Text
+  createdAt   DateTime   @default(now())
+  questions   Question[]
+}
+
+// ─── 문제 ────────────────────────────────────────────────
+model Question {
+  id            Int          @id @default(autoincrement())
+  certificateId Int
+  year          Int?                                // 출제 연도
+  round         Int?                                // 회차
+  number        Int?                                // 문제 번호
+  subject       String?      @db.VarChar(100)       // 과목명
+  content       String       @db.Text               // 문제 내용
+  options       Json                                // ["①...", "②...", "③...", "④..."]
+  answer        Int                                 // 정답 번호 (1~4)
+  explanation   String?      @db.Text               // 기본 해설
+  aiExplanation String?      @db.LongText           // AI 3단계 해설 (캐시)
+  difficulty    Difficulty   @default(MEDIUM)
+  source        String?      @db.VarChar(200)        // '[2022년 4월 24일 1번 변형]'
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  certificate   Certificate  @relation(fields: [certificateId], references: [id])
+  results       QuizResult[]
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+// ─── 사용자 ──────────────────────────────────────────────
+model User {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique @db.VarChar(255)
+  password     String         @db.VarChar(255)
+  name         String         @db.VarChar(100)
+  createdAt    DateTime       @default(now())
+  quizAttempts QuizAttempt[]
+}
+
+// ─── 퀴즈 세션 ───────────────────────────────────────────
+model QuizAttempt {
+  id           Int          @id @default(autoincrement())
+  userId       Int
+  certificateId Int?
+  totalCount   Int
+  correctCount Int          @default(0)
+  score        Float        @default(0)
+  startedAt    DateTime     @default(now())
+  finishedAt   DateTime?
+  user         User         @relation(fields: [userId], references: [id])
+  results      QuizResult[]
+}
+
+// ─── 문항별 결과 ──────────────────────────────────────────
+model QuizResult {
+  id         Int         @id @default(autoincrement())
+  attemptId  Int
+  questionId Int
+  userAnswer Int         // 사용자가 선택한 번호
+  isCorrect  Boolean
+  attempt    QuizAttempt @relation(fields: [attemptId], references: [id])
+  question   Question    @relation(fields: [questionId], references: [id])
+}

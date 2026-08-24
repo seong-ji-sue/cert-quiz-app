@@ -10,26 +10,26 @@
     "run": "NEXT_PRIVATE_LOCAL_WEBPACK=true sh start.sh"
   },
   "dependencies": {
-    "@nextpr/client-common": "^1.0.0",
     "@module-federation/runtime": "^0.12.0",
-    "next": "^14.2.3",
-    "react": "^18.3.1",
+    "@nextpr/client-common": "^1.0.0",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
+    "lodash-es": "^4.17.21",
+    "next": "^14.2.3",
+    "path": "^0.12.7",
+    "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.0",
     "react-toastify": "^11.0.2",
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
-    "sass": "^1.83.1",
-    "dayjs": "^1.11.13",
-    "lodash-es": "^4.17.21",
-    "path": "^0.12.7"
+    "sass": "^1.83.1"
   },
   "devDependencies": {
     "@module-federation/nextjs-mf": "^8.8.11",
     "cross-env": "^7.0.3",
-    "webpack": "^5.99.5",
+    "express": "^4.21.2",
     "url": "^0.11.4",
-    "express": "^4.21.2"
+    "webpack": "^5.99.5"
   }
 }
